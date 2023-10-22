@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Usuarios</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container mt-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <h1 id="usuarios-title"></h1>
+        <button class="btn btn-warning" id="cambiar-clave">
+          Cambiar Clave
+        </button>
+        <button class="btn btn-secondary" id="cerrar-sesion">
+          Cerrar Sesión
+        </button>
+      </div>
+    </div>
+
+    <div class="container mt-3" id="user-cards"></div>
+
+    <!--MODAL EDITAR USUARIO-->
+    <div
+      class="modal fade"
+      id="myModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar Usuario</h5>
+          </div>
+          <div class="modal-body">
+            <!-- Formulario de edición de usuario -->
+            <form id="userEditForm">
+              <div class="form-group">
+                <label for="nombre">Nombre</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nombre"
+                  name="nombre"
+                />
+              </div>
+              <div class="form-group">
+                <label for="correo">Correo</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="correo"
+                  name="correo"
+                />
+              </div>
+              <!-- <div class="form-group">
+                <label for="clave">Clave</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="clave"
+                  name="clave"
+                />
+              </div>-->
+              <div class="form-group">
+                <label for="telefono">Teléfono</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="telefono"
+                  name="telefono"
+                />
+              </div>
+              <div class="form-group">
+                <label for="direccion">Dirección</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="direccion"
+                  name="direccion"
+                />
+              </div>
+              <div class="form-group">
+                <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="fechaNacimiento"
+                  name="fechaNacimiento"
+                />
+              </div>
+              <div class="form-group">
+                <label for="rol">Rol</label>
+                <select class="form-control" id="rol" name="rol">
+                  <option value="Administrador">Administrador</option>
+                  <option value="Usuario">Usuario</option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              id="saveChangesButton"
+            >
+              Guardar Cambios
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--MODAL CONFIRMACIÓN ELIMINAR USUARIO-->
+    <div
+      class="modal fade"
+      id="confirmationModal"
+      tabindex="-1"
+      aria-labelledby="confirmationModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="confirmationModalLabel">
+              Confirmar eliminación
+            </h5>
+          </div>
+          <div class="modal-body">
+            ¿Estás seguro de que deseas eliminar este usuario?
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-danger"
+              id="confirmDeleteButton"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--MODAL CAMBIO CLAVE USUARIO-->
+    <div
+      class="modal fade"
+      id="cambiarClaveModal"
+      tabindex="-1"
+      aria-labelledby="cambiarClaveModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="cambiarClaveModalLabel">
+              Cambiar Clave
+            </h5>
+          </div>
+          <div class="modal-body">
+            <form id="cambiarClaveForm">
+              <div
+                class="alert alert-danger mt-3"
+                id="alerta-clave-no-coincide"
+                style="display: none"
+              >
+                Las contraseñas no coinciden.
+              </div>
+              <div class="form-group">
+                <label for="nuevaClave">Nueva Clave</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="nuevaClave"
+                  name="nuevaClave"
+                  required
+                  minlength="6"
+                />
+              </div>
+              <div class="form-group">
+                <label for="confirmarClave">Confirmar Clave</label>
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirmarClave"
+                  name="confirmarClave"
+                  required
+                  minlength="6"
+                />
+              </div>
+              <br />
+              <button type="submit" class="btn btn-primary">
+                Guardar Cambios
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/inicio.js"></script>
+    <script>
+      const rol = localStorage.getItem("rol");
+      const selectBox = document.getElementById("rol");
+
+      if (rol !== "Administrador") {
+        selectBox.disabled = true;
+      }
+      if (rol) {
+        document.getElementById(
+          "usuarios-title"
+        ).textContent = `Tu Rol dentro del sistema es - ${rol}`;
+      }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
